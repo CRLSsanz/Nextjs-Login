@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import Link from "next/link";
 import Nav from "@/Components/navbar";
 import Nav2 from "@/Components/nav2";
+import nextAuth from "next-auth";
 
 const inter = Raleway({ subsets: ["latin"], weight: ["400", "600", "700"] });
 

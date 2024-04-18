@@ -13,9 +13,12 @@ import {
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { AcmeLogo } from "./AcmeLogo";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Nav2() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const { data: session } = useSession();
+  console.log(session);
 
   const menuItems = [
     "Profile",
@@ -80,14 +83,36 @@ export default function Nav2() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
+        {session?.user ? (
+          <NavbarItem>
+            <h1 color="primary">{session.user.name}</h1>
+            <img src={`${session.user.image}`} alt="avatar" />
+          </NavbarItem>
+        ) : (
+          <NavbarItem className="Xhidden Xlg:flex flex">
+            <Button onClick={() => signIn()}>Login</Button>
+          </NavbarItem>
+        )}
+
+        {session?.user ? (
+          <NavbarItem>
+            <Button
+              onClick={async () => {
+                await signOut({
+                  callbackUrl: "/",
+                });
+              }}
+            >
+              Logout
+            </Button>
+          </NavbarItem>
+        ) : (
+          <NavbarItem>
+            <Button as={Link} color="primary" href="#" variant="flat">
+              Sign Up
+            </Button>
+          </NavbarItem>
+        )}
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (
